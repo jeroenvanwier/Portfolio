@@ -1,0 +1,87 @@
+.titlecard > canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.titlecard {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: block;
+    margin: 0;
+    color: white
+}
+
+.card-content > h1 {
+    display: inline-block;
+    margin-bottom: 15vh;
+    z-index: 1;
+}
+
+.card-content {
+    text-align: center;
+    margin: 0 auto;
+    padding: 35vh 0;
+    width: fit-content;
+}
+
+.button {
+    position: relative;
+    text-decoration: none;
+    padding: 5px 10px;
+    color: white;
+    border: 1px solid white;
+}
+
+.button::after {
+    position: absolute;
+    content: " ";
+    width: 4px;
+    height: 4px;
+    background-color: white;
+    right: -1px;
+    bottom: -1px;
+}
+
+.navlink {
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    margin: 5px 40px 5px 0
+}
+
+.navlink::after {
+    content: "";
+    position: absolute;
+    right: -20px;
+    top: 0.25vh;
+    width: 1px;
+    height: 5vh;
+    background-color: black
+}
+
+.nav:last-child::after{
+    width: 0;
+}
+
+.nav > .name {
+    position: absolute;
+    display: inline-block;
+    font-weight: bold;
+    left: 0;
+}
+
+.nav {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 6vh;
+    background-color: blue;
+    color: white;
+    text-align: right;
+}
+
