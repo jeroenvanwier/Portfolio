@@ -99,8 +99,9 @@ function draw() {
         
     r = canvas.height / 3;
     
-    left_o = [r + 50,canvas.height / 2];
-    right_o = [canvas.width - r - 50,canvas.height / 2];    
+    left_o = [r + 50,canvas.height / 2, canvas.height / 2];
+    
+    right_o = [canvas.width - r - 50,canvas.height / 2, canvas.height / 2];    
     
     drawSphere(left_o, r, xpos, ypos, zpos);
     drawSphere(right_o, r, xpos, ypos, zpos);
@@ -154,9 +155,10 @@ function drawLineSegment(a, b) {
 function drawCircle(p, r = 10, v1 = [1, 0, 0], v2 = [0, 1, 0], color=[1.0, 1.0, 1.0, 1.0]) {
     const circlePositions = [];
     for (let i = 0; i <= 180; i++) {
-        var xp = p[0] + v1[0] * r * Math.cos(i * Math.PI * 2 / 180) + v2[0] * r * Math.sin(i * Math.PI * 2 / 180)
-        var yp = p[1] + v1[1] * r * Math.cos(i * Math.PI * 2 / 180) + v2[1] * r * Math.sin(i * Math.PI * 2 / 180)
-        circlePositions.push(xp, yp);
+        var xp = p[0] + v1[0] * r * Math.cos(i * Math.PI * 2 / 180) + v2[0] * r * Math.sin(i * Math.PI * 2 / 180);
+        var yp = p[1] + v1[1] * r * Math.cos(i * Math.PI * 2 / 180) + v2[1] * r * Math.sin(i * Math.PI * 2 / 180);
+        var zp = p[2] + v1[2] * r * Math.cos(i * Math.PI * 2 / 180) + v2[2] * r * Math.sin(i * Math.PI * 2 / 180);
+        circlePositions.push(xp, yp, zp);
     }
     drawLine(circlePositions, color=color);
 }
@@ -175,7 +177,10 @@ function drawLine(positions, color = [1.0, 1.0, 1.0, 1.0]) {
     gl.uniform4fv(programInfo.uniformLocations.color, new Float32Array(color));
     
     // Set the shader to read 2 values of type FLOAT at a time from the buffer
-    const numComponents = 2;
+    var numComponents = 2;
+    if (positions.length % 3 == 0) {
+        numComponents = 3;
+    }
     const type = gl.FLOAT;
     const normalize = false;
     const stride = 0;
@@ -196,7 +201,7 @@ function drawLine(positions, color = [1.0, 1.0, 1.0, 1.0]) {
     gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
     
     // Draw the buffer as a line
-    const vertexCount = positions.length / 2;
+    const vertexCount = positions.length / numComponents;
     gl.drawArrays(gl.LINE_STRIP, offset, vertexCount);
 }
 
@@ -246,9 +251,9 @@ function move(e) {
 
 /*
  * Vertex Shader:
- * Translates an (x,y) pixel coordinate into [-1.0, 1.0]^2 plane used by OpenGL
+ * Translates an (x,y,z) pixel coordinate into [-1.0, 1.0]^3 space used by OpenGL
  *
- * aVertexPosition: the (x,y) pixel coordinate
+ * aVertexPosition: the (x,y,z) pixel coordinate
  *
  * uClientWidth: the uniform value of the width of the canvas (in pixels)
  * uClientHeight: the uniform value of the height of the canvas (in pixels)
@@ -260,7 +265,8 @@ const vsSource = `
     void main() {
         float x = -1.0 + (2.0 * aVertexPosition[0] / uClientWidth);
         float y = 1.0 - (2.0 * aVertexPosition[1] / uClientHeight);
-        gl_Position = vec4(x, y, aVertexPosition.z, aVertexPosition.w);
+        float z = aVertexPosition[2] / uClientHeight;
+        gl_Position = vec4(x, y, z, aVertexPosition.w);
     }
 `;
 
@@ -275,7 +281,7 @@ const fsSource = `
     uniform vec4 uColor;
     
     void main() {
-        gl_FragColor = uColor;
+        gl_FragColor = uColor * gl_FragCoord.z * gl_FragCoord.z;
     }
 `;
 
