@@ -1,3 +1,15 @@
+:root {
+  --cdark: #4f3e5f;
+  --cnorm: #8465ab;
+  --clight: #b28cd9;
+  --cgray: #b3a6c7;
+  --cyellow: #eded7f;
+  --cred: #FF3F8E;
+  --cgreen: #04C2C9;
+  --cblue: #2E55C1;
+  --cdarkgray: #1b242f;
+}
+
 .titlecard > canvas {
     position: absolute;
     top: 0;
@@ -13,7 +25,7 @@
     height: 100vh;
     display: block;
     margin: 0;
-    color: white
+    color: white;
 }
 
 .card-content > h1 {
@@ -30,11 +42,19 @@
 }
 
 .button {
+    font-size: 1.5rem;
     position: relative;
     text-decoration: none;
     padding: 5px 10px;
     color: white;
     border: 1px solid white;
+}
+
+.button:hover::after,
+.button:focus-visible::after {
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    background-color: var(--cnorm);
 }
 
 .button::after {
@@ -45,43 +65,53 @@
     background-color: white;
     right: -1px;
     bottom: -1px;
+    transition: width ease-in-out 200ms, height ease-in-out 200ms, background-color ease-in-out 200ms;
+    z-index: -1;
 }
 
 .navlink {
     position: relative;
     text-decoration: none;
     color: inherit;
-    margin: 5px 40px 5px 0
+    top: 1rem;
+    margin-right: 3rem;
+    transition: color ease-in-out 100ms;
 }
 
-.navlink::after {
-    content: "";
-    position: absolute;
-    right: -20px;
-    top: 0.25vh;
-    width: 1px;
-    height: 5vh;
-    background-color: black
-}
-
-.nav:last-child::after{
-    width: 0;
+.navlink:focus-visible,
+.navlink:hover {
+    color: var(--cblue)
 }
 
 .nav > .name {
     position: absolute;
     display: inline-block;
     font-weight: bold;
-    left: 0;
+    left: 1rem;
+    top: .5rem;
+    height: 1.5rem;
+    color: var(--cnorm);
+    font-size: 2rem;
+    text-decoration: none;
 }
 
 .nav {
     position: sticky;
     top: 0;
     width: 100%;
-    height: 6vh;
-    background-color: blue;
+    height: 4rem;
+    background-color: var(--cdarkgray);
     color: white;
     text-align: right;
+    font-size: 1.25rem;
 }
 
+.nav::after {
+    position: absolute;
+    content: " ";
+    background-color: var(--clight);
+    height: 0.25rem;
+    bottom: -0.25rem;
+    left: 0;
+    width: 100%
+}
